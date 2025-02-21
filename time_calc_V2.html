@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Total Playtime Counter</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background: #f0f8ff;
+            color: #333;
+        }
+        .container {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            margin-top: 20px;
+        }
+        input {
+            margin: 5px;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            width: 150px;
+            text-align: center;
+            background: #f9f9f9;
+            color: #333;
+        }
+        input::placeholder {
+            color: #999;
+        }
+        button {
+            margin: 10px;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            color: white;
+        }
+        .add-btn {
+            background-color: #007bff;
+        }
+        .add-btn:hover {
+            background-color: #0056b3;
+        }
+        .calculate-btn {
+            background-color: #28a745;
+        }
+        .calculate-btn:hover {
+            background-color: #1e7e34;
+        }
+        #result {
+            font-size: 22px;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+    <script>
+        function addTimeField() {
+            let container = document.getElementById("timeInputs");
+            let input = document.createElement("input");
+            input.type = "text";
+            input.placeholder = "HH:MM";
+            input.className = "time-input";
+            container.appendChild(input);
+            container.appendChild(document.createElement("br"));
+        }
+
+        function sumTimes() {
+            let inputs = document.querySelectorAll(".time-input");
+            let totalHours = 0, totalMinutes = 0;
+            
+            inputs.forEach(input => {
+                let time = input.value.trim();
+                if (time) {
+                    let parts = time.split(":");
+                    if (parts.length === 2) {
+                        let hours = parseInt(parts[0]);
+                        let minutes = parseInt(parts[1]);
+                        if (!isNaN(hours) && !isNaN(minutes)) {
+                            totalHours += hours;
+                            totalMinutes += minutes;
+                        }
+                    }
+                }
+            });
+            
+            totalHours += Math.floor(totalMinutes / 60);
+            totalMinutes %= 60;
+            
+            document.getElementById("result").innerText = "Total playtime: " + totalHours + ":" + (totalMinutes < 10 ? "0" : "") + totalMinutes;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Total Playtime Counter</h1>
+        <div id="timeInputs"></div>
+        <button class="add-btn" onclick="addTimeField()">Add Time Input</button>
+        <button class="calculate-btn" onclick="sumTimes()">Calculate Total Playtime</button>
+        <p id="result"></p>
+    </div>
+</body>
+</html>
