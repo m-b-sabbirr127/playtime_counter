@@ -70,6 +70,12 @@
             input.type = "text";
             input.placeholder = "HH:MM";
             input.className = "time-input";
+            input.maxLength = 5;
+            input.addEventListener("input", function() {
+                if (this.value.length === 2 && !this.value.includes(":")) {
+                    this.value += ":";
+                }
+            });
             container.appendChild(input);
             container.appendChild(document.createElement("br"));
         }
