@@ -4,118 +4,240 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Total Playtime Counter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #007bff;
+            --secondary: #3498db;
+            --accent: #dc3545;
+            --background: #f5f6fa;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background: linear-gradient(45deg, #f0f8ff, #e0e7ff);
-            color: #333;
-            height: 100vh;
+            background: linear-gradient(135deg, var(--background), #dfe4ea);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background 0.5s ease;
+            padding: 20px;
+            overflow-x: hidden;
         }
+
         .container {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
             width: 100%;
-            max-width: 400px;
+            padding: 2rem;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(12px);
+            animation: slideIn 0.5s ease;
+            text-align: center;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .instructions {
+            color: #7f8c8d;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .instructions span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        #timeInputs {
+            margin-bottom: 1.5rem;
+        }
+
+        .time-input {
+            width: 100%;
+            max-width: 150px;
+            padding: 12px 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: rgba(245, 245, 247, 0.7);
+            text-align: center;
+            margin: 0.5rem auto;
+            display: block;
+        }
+
+        .time-input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        button {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 150px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
             position: relative;
             overflow: hidden;
         }
-        input {
-            margin: 5px;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            outline: none;
-            width: 150px;
-            text-align: center;
-            background: #f9f9f9;
-            color: #333;
-            transition: all 0.3s;
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
         }
-        input::placeholder {
-            color: #999;
+
+        button:hover::after {
+            width: 300px;
+            height: 300px;
         }
-        input:focus {
-            border-color: #007bff;
-            transform: scale(1.05);
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
-        button {
-            margin: 10px;
-            padding: 12px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s ease-in-out;
-            font-weight: bold;
-            color: white;
-            width: 100%;
-        }
+
         .add-btn {
-            background-color: #007bff;
+            background: linear-gradient(45deg, var(--primary), #0056b3);
+            color: white;
         }
-        .add-btn:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
+
+        .calc-btn {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            color: white;
         }
-        .calculate-btn {
-            background-color: #28a745;
-        }
-        .calculate-btn:hover {
-            background-color: #1e7e34;
-            transform: scale(1.05);
-        }
+
         .reset-btn {
-            background-color: #dc3545;
+            background: linear-gradient(45deg, var(--accent), #c82333);
+            color: white;
         }
-        .reset-btn:hover {
-            background-color: #c82333;
-            transform: scale(1.05);
+
+        .theme-btn {
+            background: linear-gradient(45deg, #8e44ad, #732d91);
+            color: white;
         }
-        #result {
-            font-size: 22px;
-            margin-top: 15px;
-            font-weight: bold;
-            color: #333;
-        }
-        .time-input {
+
+        .result-box {
+            margin-top: 1.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            background: #f8f9fb;
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(255, 255, 255, 0.8);
+            border: 1px solid #e1e4e8;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
             animation: fadeIn 0.5s ease;
         }
+
+        .result-box span {
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 1.8rem;
+        }
+
         @keyframes fadeIn {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
-        .tooltip {
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #333;
-            color: white;
-            padding: 5px;
-            border-radius: 5px;
-            font-size: 12px;
-            display: none;
+
+        .history {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
         }
-        input:hover + .tooltip {
-            display: block;
+
+        @media (max-width: 480px) {
+            .container { padding: 1.5rem; }
+            h1 { font-size: 2rem; }
+            .instructions { font-size: 0.9rem; padding: 0.8rem; }
+            button { padding: 14px 20px; font-size: 1rem; min-width: 130px; }
+            .result-box { font-size: 1.1rem; }
+            .result-box span { font-size: 1.5rem; }
+            .button-group { flex-direction: column; }
         }
     </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Total Playtime Counter</h1>
+        <div class="instructions">
+            Keep tapping on <span>"Add Time Input"</span> to add video length as much as you need
+        </div>
+        <div id="timeInputs"></div>
+        <div class="button-group">
+            <button class="add-btn" onclick="addTimeField()">Add Time Input</button>
+            <button class="calc-btn" onclick="sumTimes()">Calculate Playtime</button>
+            <button class="reset-btn" onclick="resetFields()">Reset</button>
+            <button class="theme-btn" onclick="toggleTheme()">Dark Mode</button>
+        </div>
+        <div class="result-box" id="result"></div>
+        <div class="history" id="history"></div>
+    </div>
+
     <script>
+        let historyArray = [];
+        let isDarkMode = false;
+
         function addTimeField() {
             let container = document.getElementById("timeInputs");
             let input = document.createElement("input");
@@ -128,51 +250,70 @@
                     this.value += ":";
                 }
             });
-            let tooltip = document.createElement("div");
-            tooltip.className = "tooltip";
-            tooltip.innerText = "Enter time in HH:MM format";
             container.appendChild(input);
-            container.appendChild(tooltip);
-            container.appendChild(document.createElement("br"));
         }
 
         function sumTimes() {
             let inputs = document.querySelectorAll(".time-input");
             let totalHours = 0, totalMinutes = 0;
-            
+            let valid = true;
+
             inputs.forEach(input => {
                 let time = input.value.trim();
                 if (time.match(/^\d{1,2}:\d{2}$/)) {
                     let [hours, minutes] = time.split(":").map(Number);
-                    if (minutes >= 0 && minutes < 60) {
+                    if (minutes >= 0 && minutes < 60 && hours >= 0) {
                         totalHours += hours;
                         totalMinutes += minutes;
+                    } else {
+                        valid = false;
                     }
+                } else if (time !== "") {
+                    valid = false;
                 }
             });
-            
+
+            if (!valid) {
+                document.getElementById("result").innerHTML = "Error: Invalid time format or values!";
+                return;
+            }
+
             totalHours += Math.floor(totalMinutes / 60);
             totalMinutes %= 60;
-            
-            document.getElementById("result").innerText = `Total playtime: ${totalHours}:${totalMinutes.toString().padStart(2, '0')}`;
+            let resultText = `${totalHours}:${totalMinutes.toString().padStart(2, '0')}`;
+            document.getElementById("result").innerHTML = `Total Playtime: <span>${resultText}</span>`;
+            historyArray.unshift(`Total: ${resultText}`);
+            updateHistory();
         }
 
         function resetFields() {
-            let inputs = document.querySelectorAll(".time-input");
-            inputs.forEach(input => input.value = "");
-            document.getElementById("result").innerText = "";
+            let container = document.getElementById("timeInputs");
+            container.innerHTML = "";
+            document.getElementById("result").innerHTML = "";
+        }
+
+        function updateHistory() {
+            const historyDiv = document.getElementById("history");
+            historyDiv.innerHTML = "<h4>History</h4>" + historyArray.slice(0, 5).map(item => `<p>${item}</p>`).join("");
+        }
+
+        function toggleTheme() {
+            isDarkMode = !isDarkMode;
+            document.body.style.background = isDarkMode 
+                ? "linear-gradient(135deg, #2c3e50, #34495e)"
+                : "linear-gradient(135deg, #f5f6fa, #dfe4ea)";
+            
+            document.querySelector(".container").style.background = isDarkMode 
+                ? "rgba(52, 73, 94, 0.95)" 
+                : "rgba(255, 255, 255, 0.95)";
+
+            const resultBox = document.getElementById("result");
+            resultBox.style.background = isDarkMode ? "#4b5e71" : "#f8f9fb";
+            resultBox.style.border = isDarkMode ? "1px solid #627285" : "1px solid #e1e4e8";
+            resultBox.style.color = isDarkMode ? "#dfe4ea" : "#2c3e50";
+
+            document.querySelector(".theme-btn").innerText = isDarkMode ? "Light Mode" : "Dark Mode";
         }
     </script>
-</head>
-<body>
-    <div class="container">
-        <h1>Total Playtime Counter</h1>
-        <h3>Tap on "Add Time Input" to add video length as much as you need</h3>
-        <div id="timeInputs"></div>
-        <button class="add-btn" onclick="addTimeField()">Add Time Input</button>
-        <button class="calculate-btn" onclick="sumTimes()">Calculate Total Playtime</button>
-        <button class="reset-btn" onclick="resetFields()">Reset</button>
-        <p id="result"></p>
-    </div>
 </body>
 </html>
