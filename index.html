@@ -1,22 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Total Playtime Counter</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             text-align: center;
             margin-top: 50px;
-            background: #f0f8ff;
+            background: linear-gradient(45deg, #f0f8ff, #e0e7ff);
             color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.5s ease;
         }
         .container {
             background: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-            margin-top: 20px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            overflow: hidden;
         }
         input {
             margin: 5px;
@@ -29,9 +38,14 @@
             text-align: center;
             background: #f9f9f9;
             color: #333;
+            transition: all 0.3s;
         }
         input::placeholder {
             color: #999;
+        }
+        input:focus {
+            border-color: #007bff;
+            transform: scale(1.05);
         }
         button {
             margin: 10px;
@@ -40,27 +54,65 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: 0.3s;
+            transition: 0.3s ease-in-out;
             font-weight: bold;
             color: white;
+            width: 100%;
         }
         .add-btn {
             background-color: #007bff;
         }
         .add-btn:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
         }
         .calculate-btn {
             background-color: #28a745;
         }
         .calculate-btn:hover {
             background-color: #1e7e34;
+            transform: scale(1.05);
+        }
+        .reset-btn {
+            background-color: #dc3545;
+        }
+        .reset-btn:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
         }
         #result {
             font-size: 22px;
             margin-top: 15px;
             font-weight: bold;
             color: #333;
+        }
+        .time-input {
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .tooltip {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 12px;
+            display: none;
+        }
+        input:hover + .tooltip {
+            display: block;
         }
     </style>
     <script>
@@ -76,7 +128,11 @@
                     this.value += ":";
                 }
             });
+            let tooltip = document.createElement("div");
+            tooltip.className = "tooltip";
+            tooltip.innerText = "Enter time in HH:MM format";
             container.appendChild(input);
+            container.appendChild(tooltip);
             container.appendChild(document.createElement("br"));
         }
 
@@ -86,15 +142,11 @@
             
             inputs.forEach(input => {
                 let time = input.value.trim();
-                if (time) {
-                    let parts = time.split(":");
-                    if (parts.length === 2) {
-                        let hours = parseInt(parts[0]);
-                        let minutes = parseInt(parts[1]);
-                        if (!isNaN(hours) && !isNaN(minutes)) {
-                            totalHours += hours;
-                            totalMinutes += minutes;
-                        }
+                if (time.match(/^\d{1,2}:\d{2}$/)) {
+                    let [hours, minutes] = time.split(":").map(Number);
+                    if (minutes >= 0 && minutes < 60) {
+                        totalHours += hours;
+                        totalMinutes += minutes;
                     }
                 }
             });
@@ -102,16 +154,24 @@
             totalHours += Math.floor(totalMinutes / 60);
             totalMinutes %= 60;
             
-            document.getElementById("result").innerText = "Total playtime: " + totalHours + ":" + (totalMinutes < 10 ? "0" : "") + totalMinutes;
+            document.getElementById("result").innerText = `Total playtime: ${totalHours}:${totalMinutes.toString().padStart(2, '0')}`;
+        }
+
+        function resetFields() {
+            let inputs = document.querySelectorAll(".time-input");
+            inputs.forEach(input => input.value = "");
+            document.getElementById("result").innerText = "";
         }
     </script>
 </head>
 <body>
     <div class="container">
         <h1>Total Playtime Counter</h1>
+        <h3>Keep tapping on "Add Time Input" to add video length as much as you need</h3>
         <div id="timeInputs"></div>
         <button class="add-btn" onclick="addTimeField()">Add Time Input</button>
         <button class="calculate-btn" onclick="sumTimes()">Calculate Total Playtime</button>
+        <button class="reset-btn" onclick="resetFields()">Reset</button>
         <p id="result"></p>
     </div>
 </body>
